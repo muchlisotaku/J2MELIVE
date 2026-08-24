@@ -676,6 +676,8 @@ public abstract class Canvas extends Displayable {
 		if (surface == null || !surface.isValid()) {
 			return true;
 		}
+		// ── Frame-sync hook: mark start of new frame for StringEditorManager ──
+		javax.microedition.util.StringEditorManager.getInstance().beginFrame();
 		try {
 			synchronized (surfaceLock) {
 				android.graphics.Canvas canvas = graphicsMode == 3 ?
@@ -697,6 +699,9 @@ public abstract class Canvas extends Displayable {
 			if (parallelRedraw) uiHandler.removeMessages(0);
 		} catch (Exception e) {
 			Log.w(TAG, "repaintScreen: " + e);
+		} finally {
+			// ── Frame-sync hook: mark end of frame ──────────────────────────
+			javax.microedition.util.StringEditorManager.getInstance().flushFrame();
 		}
 		return true;
 	}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider paths untuk Debug Log Export.
+    Digunakan oleh LogExporter untuk berbagi file log via Share Intent.
+    Referensi: https://developer.android.com/reference/androidx/core/content/FileProvider
+-->
+<paths>
+    <!-- Izinkan berbagi file dari direktori cache internal aplikasi -->
+    <cache-path name="debug_logs" path="debug_logs/" />
+</paths>
