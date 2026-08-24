@@ -183,7 +183,7 @@ public class MicroActivity extends AppCompatActivity {
 		GameLogger.getInstance().info("MicroActivity", "Loading game: " + appName);
 		debugConsoleLayer = new DebugConsoleLayer(this);
 		debugConsoleLayer.setGameName(appName != null ? appName : "Unknown");
-		binding.overlayView.addView(debugConsoleLayer,
+		binding.midletFrame.addView(debugConsoleLayer,
 				new android.widget.FrameLayout.LayoutParams(
 						android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
 						android.widget.FrameLayout.LayoutParams.MATCH_PARENT));
