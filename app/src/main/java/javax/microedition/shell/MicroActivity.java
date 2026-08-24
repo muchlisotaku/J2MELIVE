@@ -85,8 +85,11 @@ import ru.playsoftware.j2meloader.BuildConfig;
 import ru.playsoftware.j2meloader.R;
 import ru.playsoftware.j2meloader.config.Config;
 import ru.playsoftware.j2meloader.databinding.ActivityMicroBinding;
+import ru.playsoftware.j2meloader.debug.GameCrashHandler;
+import ru.playsoftware.j2meloader.debug.GameLogger;
 import ru.playsoftware.j2meloader.util.Constants;
 import ru.playsoftware.j2meloader.util.LogUtils;
+import javax.microedition.lcdui.overlay.DebugConsoleLayer;
 
 public class MicroActivity extends AppCompatActivity {
 	private static final int ORIENTATION_DEFAULT = 0;
@@ -103,6 +106,7 @@ public class MicroActivity extends AppCompatActivity {
 	private InputMethodManager inputMethodManager;
 	private int menuKey;
 	private String appPath;
+	private DebugConsoleLayer debugConsoleLayer;
 
 	public ActivityMicroBinding binding;
 
@@ -172,6 +176,19 @@ public class MicroActivity extends AppCompatActivity {
 			return;
 		}
 		microLoader.applyConfiguration();
+
+		// ---- Debug Console & Crash Handler ----
+		GameCrashHandler.install();
+		GameLogger.getInstance().startIntercept();
+		GameLogger.getInstance().info("MicroActivity", "Loading game: " + appName);
+		debugConsoleLayer = new DebugConsoleLayer(this);
+		debugConsoleLayer.setGameName(appName != null ? appName : "Unknown");
+		binding.overlayView.addView(debugConsoleLayer,
+				new android.widget.FrameLayout.LayoutParams(
+						android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+						android.widget.FrameLayout.LayoutParams.MATCH_PARENT));
+		// ---- End Debug Console Setup ----
+
 		VirtualKeyboard vk = ContextHolder.getVk();
 		int orientation = microLoader.getOrientation();
 		if (vk != null) {
@@ -498,6 +515,10 @@ public class MicroActivity extends AppCompatActivity {
 			showUIInspectorDialog();
 		} else if (id == R.id.action_bytecode_hotswap) {
 			showBytecodeHotswapDialog();
+		} else if (id == R.id.action_debug_console) {
+			if (debugConsoleLayer != null) {
+				debugConsoleLayer.toggleConsole();
+			}
 		} else if (ContextHolder.getVk() != null) {
 			// Handled only when virtual keyboard is enabled
 			handleVkOptions(id);
@@ -772,6 +793,12 @@ public class MicroActivity extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
+		if (debugConsoleLayer != null) {
+			debugConsoleLayer.onDestroy();
+			debugConsoleLayer = null;
+		}
+		GameLogger.getInstance().stopIntercept();
+		GameCrashHandler.uninstall();
 		binding = null;
 		super.onDestroy();
 	}

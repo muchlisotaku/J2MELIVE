@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider paths untuk NononsenseApps FilePicker dan Debug Log Export.
+    File ini di-reference oleh androidx.core.content.FileProvider di AndroidManifest.xml.
+-->
+<paths>
+    <!-- Diperlukan oleh library NononsenseApps FilePicker -->
+    <external-path name="nnf_external" path="." />
+    <files-path name="nnf_internal" path="." />
+
+    <!-- Untuk debug log export via LogExporter (Share Intent) -->
+    <cache-path name="debug_logs" path="debug_logs/" />
+</paths>

@@ -32,6 +32,8 @@ import javax.microedition.util.ContextHolder;
 import androidx.annotation.NonNull;
 
 import ru.playsoftware.j2meloader.config.Config;
+import ru.playsoftware.j2meloader.debug.GameCrashHandler;
+import ru.playsoftware.j2meloader.debug.GameLogger;
 
 public class MidletThread extends HandlerThread implements Handler.Callback {
 	private static final String TAG = MidletThread.class.getName();
@@ -135,7 +137,9 @@ public class MidletThread extends HandlerThread implements Handler.Callback {
 				try {
 					midlet = microLoader.loadMIDlet(this.mainClass);
 					state = PAUSED;
+					GameLogger.getInstance().info(TAG, "MIDlet loaded: " + this.mainClass);
 				} catch (Throwable t) {
+					GameCrashHandler.handleGameException("INIT", t);
 					throw new RuntimeException("Init midlet failed", t);
 				}
 				break;
@@ -145,12 +149,15 @@ public class MidletThread extends HandlerThread implements Handler.Callback {
 				}
 				try {
 					state = STARTED;
+					GameLogger.getInstance().info(TAG, "startApp()");
 					midlet.startApp();
 				} catch (MIDletStateChangeException e) {
 					state = PAUSED;
+					GameLogger.getInstance().warn(TAG, "Midlet refused to start: " + e.getMessage());
 					Log.w(TAG, "Midlet doesn't want to start!", e);
 				} catch (Throwable t) {
 					state = DESTROYED;
+					GameCrashHandler.handleGameException("startApp", t);
 					throw new RuntimeException("Failed startApp", t);
 				}
 				break;
@@ -159,10 +166,12 @@ public class MidletThread extends HandlerThread implements Handler.Callback {
 					break;
 				}
 				try {
+					GameLogger.getInstance().debug(TAG, "pauseApp()");
 					midlet.pauseApp();
 					state = PAUSED;
 				} catch (Throwable t) {
 					state = DESTROYED;
+					GameCrashHandler.handleGameException("pauseApp", t);
 					try {
 						midlet.destroyApp(true);
 					} catch (MIDletStateChangeException ignored) {}
@@ -176,10 +185,13 @@ public class MidletThread extends HandlerThread implements Handler.Callback {
 				}
 				state = DESTROYED;
 				try {
+					GameLogger.getInstance().info(TAG, "destroyApp()");
 					midlet.destroyApp(true);
 				} catch (MIDletStateChangeException e) {
+					GameLogger.getInstance().warn(TAG, "Midlet didn't want to die: " + e.getMessage());
 					Log.w(TAG, "Midlet didn't want to die!", e);
 				} catch (Throwable t) {
+					GameCrashHandler.handleGameException("destroyApp", t);
 					Log.e(TAG, "Filed destroyApp:", t);
 				}
 				notifyDestroyed();

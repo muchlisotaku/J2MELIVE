@@ -287,4 +287,5 @@
     <string name="action_png_injector">PNG/Asset Injector</string>
     <string name="action_ui_inspector">UI Overlay Inspector</string>
     <string name="action_bytecode_hotswap">Bytecode Hotswap</string>
+    <string name="action_debug_console">Debug Console</string>
 </resources>

@@ -47,6 +47,10 @@
             android:title="@string/action_bytecode_hotswap" />
 
         <item
+            android:id="@+id/action_debug_console"
+            android:title="@string/action_debug_console" />
+
+        <item
             android:id="@+id/action_submenu_vk"
             android:title="@string/PREF_VIRTUAL_KEYBOARD_OPTIONS">
             <menu>

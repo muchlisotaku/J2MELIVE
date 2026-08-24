@@ -40,6 +40,7 @@ import java.util.Arrays;
 
 import javax.microedition.util.ContextHolder;
 
+import ru.playsoftware.j2meloader.config.ShaderInstaller;
 import ru.playsoftware.j2meloader.util.Constants;
 
 public class EmulatorApplication extends Application {
@@ -81,6 +82,10 @@ public class EmulatorApplication extends Application {
 		sp.registerOnSharedPreferenceChangeListener(themeListener);
 		setNightMode(sp.getString(Constants.PREF_THEME, null));
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+		// Install shader bawaan ke storage di background thread
+		final Context appContext = this;
+		new Thread(() -> ShaderInstaller.installIfNeeded(appContext), "ShaderInstaller").start();
 	}
 
 	@SuppressLint("PackageManagerGetSignatures")
