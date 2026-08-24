@@ -67,6 +67,10 @@ public class MidletThread extends HandlerThread implements Handler.Callback {
 		instance = new MidletThread(microLoader, mainClass);
 	}
 
+	public static MIDlet getCurrentMidlet() {
+		return instance != null ? instance.midlet : null;
+	}
+
 	public static void notifyDestroyed() {
 		Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 		if (instance != null) {

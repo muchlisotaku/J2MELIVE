@@ -77,6 +77,7 @@ import javax.microedition.lcdui.event.SimpleEvent;
 import javax.microedition.lcdui.keyboard.VirtualKeyboard;
 import javax.microedition.location.LocationProviderImpl;
 import javax.microedition.util.ContextHolder;
+import javax.microedition.util.UIOverlayInspector;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
@@ -339,6 +340,7 @@ public class MicroActivity extends AppCompatActivity {
 	public void setCurrent(Displayable displayable) {
 		ViewHandler.postEvent(new SetCurrentEvent(current, displayable));
 		current = displayable;
+		javax.microedition.util.UIOverlayInspector.getInstance().recordDisplayable(displayable);
 	}
 
 	public Displayable getCurrent() {
@@ -488,6 +490,14 @@ public class MicroActivity extends AppCompatActivity {
 			showGameSpeedDialog();
 		} else if (id == R.id.action_string_editor) {
 			showLiveStringEditorDialog();
+		} else if (id == R.id.action_memory_editor) {
+			showMemoryEditorDialog();
+		} else if (id == R.id.action_png_injector) {
+			showPngInjectorDialog();
+		} else if (id == R.id.action_ui_inspector) {
+			showUIInspectorDialog();
+		} else if (id == R.id.action_bytecode_hotswap) {
+			showBytecodeHotswapDialog();
 		} else if (ContextHolder.getVk() != null) {
 			// Handled only when virtual keyboard is enabled
 			handleVkOptions(id);
@@ -667,6 +677,27 @@ public class MicroActivity extends AppCompatActivity {
 
 	private void showLiveStringEditorDialog() {
 		LiveStringEditorDialog.newInstance().show(getSupportFragmentManager(), LiveStringEditorDialog.TAG);
+	}
+
+	private void showMemoryEditorDialog() {
+		// Set target midlet ke instance yang aktif
+		Object midlet = javax.microedition.shell.MidletThread.getCurrentMidlet();
+		if (midlet != null) {
+			javax.microedition.util.RuntimeMemoryEditor.getInstance().setTargetMidlet(midlet);
+		}
+		MemoryEditorDialog.newInstance().show(getSupportFragmentManager(), MemoryEditorDialog.TAG);
+	}
+
+	private void showPngInjectorDialog() {
+		PngInjectorDialog.newInstance().show(getSupportFragmentManager(), PngInjectorDialog.TAG);
+	}
+
+	private void showUIInspectorDialog() {
+		UIInspectorDialog.newInstance().show(getSupportFragmentManager(), UIInspectorDialog.TAG);
+	}
+
+	private void showBytecodeHotswapDialog() {
+		BytecodeHotswapDialog.newInstance().show(getSupportFragmentManager(), BytecodeHotswapDialog.TAG);
 	}
 
 	@Override

@@ -281,4 +281,10 @@
     <string name="string_editor_exported">Exported to: %s</string>
     <string name="string_editor_imported">Successfully imported string replacements!</string>
     <string name="string_editor_import_failed">Failed to import JSON file.</string>
+
+    <!-- Advanced Dev Tools -->
+    <string name="action_memory_editor">Memory Editor (GG)</string>
+    <string name="action_png_injector">PNG/Asset Injector</string>
+    <string name="action_ui_inspector">UI Overlay Inspector</string>
+    <string name="action_bytecode_hotswap">Bytecode Hotswap</string>
 </resources>

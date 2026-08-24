@@ -114,6 +114,12 @@ public class AppClassLoader extends DexClassLoader {
 			Log.w(TAG, "Can't load res on empty path");
 			return null;
 		}
+		// Check LivePngInjector override first
+		byte[] injected = javax.microedition.util.LivePngInjector.getInstance().getInjectedBytes(name);
+		if (injected != null) {
+			android.util.Log.d(TAG, "LivePngInjector: serving override for: " + name);
+			return injected;
+		}
 		if (!BuildConfig.FULL_EMULATOR) {
 			try {
 				InputStream stream = AppClassLoader.class.getClassLoader().getResourceAsStream(name);
