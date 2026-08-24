@@ -338,6 +338,11 @@ public class ConfigActivity extends BaseActivity implements View.OnClickListener
 			//noinspection ResultOfMethodCallIgnored
 			dir.mkdirs();
 		}
+		// Fallback: jika folder shader kosong, copy dari assets sekarang
+		File[] iniCheck = dir.listFiles((f) -> f.isFile() && f.getName().toLowerCase().endsWith(".ini"));
+		if (iniCheck == null || iniCheck.length == 0) {
+			ShaderInstaller.installIfNeeded(this);
+		}
 		ArrayList<ShaderInfo> infos = new ArrayList<>();
 		spShaderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, infos);
 		spShaderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

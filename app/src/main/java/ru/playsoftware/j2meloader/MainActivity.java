@@ -42,6 +42,7 @@ import ru.playsoftware.j2meloader.applist.AppListModel;
 import ru.playsoftware.j2meloader.applist.AppsListFragment;
 import ru.playsoftware.j2meloader.base.BaseActivity;
 import ru.playsoftware.j2meloader.config.Config;
+import ru.playsoftware.j2meloader.config.ShaderInstaller;
 import ru.playsoftware.j2meloader.util.FileUtils;
 import ru.playsoftware.j2meloader.util.PickDirResultContract;
 import ru.woesss.j2me.installer.InstallerDialog;
@@ -100,6 +101,9 @@ public class MainActivity extends BaseActivity {
 		if (dir.isDirectory() && dir.canWrite()) {
 			FileUtils.initWorkDir(dir);
 			appListModel.getAppRepository().onWorkDirReady();
+			// Install shader bawaan setelah storage siap dan permission granted
+			final android.content.Context ctx = getApplicationContext();
+			new Thread(() -> ShaderInstaller.installIfNeeded(ctx), "ShaderInstaller").start();
 			return;
 		}
 		if (dir.exists() || dir.getParentFile() == null || !dir.getParentFile().isDirectory()
